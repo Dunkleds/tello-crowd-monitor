@@ -1,131 +1,131 @@
-# Tello Crowd Density Monitor
+# Monitor de Densidad de Personas con Dron Tello
 
-A real-time crowd density monitoring system using a **DJI Tello drone**, **YOLOv8** for person detection, and **AprilTag** markers for dynamic area calibration.
+Sistema de monitoreo de densidad de personas en tiempo real usando un **dron DJI Tello**, **YOLOv8** para detección de personas y marcadores **AprilTag** para calibración dinámica del área.
 
-Built as a computer vision and robotics project at **Universidad de O'Higgins (UOH)**.
+Desarrollado como proyecto de visión computacional y robótica en la **Universidad de O'Higgins (UOH)**.
 
 ---
 
 ## Demo
 
-> *Flight demo video / GIF coming soon*
+> *Video / GIF de vuelo próximamente*
 
 ---
 
-## How It Works
+## ¿Cómo funciona?
 
-The drone flies over a delimited area marked by **AprilTag** fiducial markers placed on the ground. The system:
+El dron sobrevuela un área delimitada por marcadores **AprilTag** colocados en el suelo. El sistema:
 
-1. Detects the AprilTags to define the monitored polygon area
-2. Uses the known real-world distance between two reference tags to dynamically calibrate pixel-to-meter conversion at any flight altitude
-3. Runs **YOLOv8** to detect people in each frame
-4. Counts how many people are inside the polygon
-5. Calculates crowd density (people/m²) in real time
-6. Overlays all telemetry data on the live video feed and saves every frame
-
----
-
-## Features
-
-- Real-time person detection with YOLOv8
-- Dynamic area calibration (works at any altitude)
-- Crowd density calculation (people / m²)
-- Live telemetry overlay: area, density, drone height, battery, flight time
-- Automatic frame saving (raw + processed)
-- Safe landing on keypress or Ctrl+C
-- macOS and Linux/Windows compatible
+1. Detecta los AprilTags para definir el polígono del área monitoreada
+2. Usa la distancia real conocida entre dos tags de referencia para calibrar dinámicamente la conversión de píxeles a metros, a cualquier altura de vuelo
+3. Ejecuta **YOLOv8** para detectar personas en cada frame
+4. Cuenta cuántas personas están dentro del polígono
+5. Calcula la densidad de personas (personas/m²) en tiempo real
+6. Superpone toda la telemetría sobre el video en vivo y guarda cada frame
 
 ---
 
-## Tech Stack
+## Características
 
-| Component | Technology |
+- Detección de personas en tiempo real con YOLOv8
+- Calibración dinámica del área (funciona a cualquier altura)
+- Cálculo de densidad de personas (personas/m²)
+- Telemetría en pantalla: área, densidad, altura del dron, batería y tiempo de vuelo
+- Guardado automático de frames (originales y procesados)
+- Aterrizaje seguro con tecla o Ctrl+C
+- Compatible con macOS y Linux/Windows
+
+---
+
+## Tecnologías utilizadas
+
+| Componente | Tecnología |
 |---|---|
-| Drone | DJI Tello (djitellopy) |
-| Person detection | YOLOv8 (Ultralytics) |
-| Area markers | AprilTags - tag36h11 (pupil-apriltags) |
-| Image processing | OpenCV, NumPy |
-| Keyboard input | pynput (macOS) / OpenCV (Linux/Windows) |
+| Dron | DJI Tello (djitellopy) |
+| Detección de personas | YOLOv8 (Ultralytics) |
+| Marcadores de área | AprilTags - tag36h11 (pupil-apriltags) |
+| Procesamiento de imagen | OpenCV, NumPy |
+| Entrada de teclado | pynput (macOS) / OpenCV (Linux/Windows) |
 
 ---
 
-## Project Structure
+## Estructura del proyecto
 
 ```
 tello-crowd-monitor/
-├── main.py               # Main application
-├── requirements.txt      # Python dependencies
+├── main.py               # Aplicación principal
+├── requirements.txt      # Dependencias de Python
 ├── README.md
-└── images/               # Auto-generated on first run
+└── images/               # Generada automáticamente al ejecutar
     └── YYYYMMDD_HHMMSS/
-        ├── 000001.png    # Raw frames
+        ├── 000001.png    # Frames originales
         └── processed/
-            └── 000001.png  # Frames with detections
+            └── 000001.png  # Frames con detecciones
 ```
 
 ---
 
-## Setup
+## Instalación y uso
 
-### Requirements
+### Requisitos previos
 
 - Python 3.9+
-- DJI Tello drone
-- YOLOv8 model file (`yolo26m.pt`) in the project root
-- AprilTag markers (tag36h11 family) — at least 3, ideally 4
+- Dron DJI Tello
+- Archivo del modelo YOLOv8 (`yolo26m.pt`) en la raíz del proyecto
+- Marcadores AprilTag (familia tag36h11) — mínimo 3, idealmente 4
 
-### Installation
+### Instalación
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/tello-crowd-monitor.git
+git clone https://github.com/TU_USUARIO/tello-crowd-monitor.git
 cd tello-crowd-monitor
 pip install -r requirements.txt
 ```
 
-### Running
+### Ejecución
 
-1. Connect your computer to the Tello's WiFi network
-2. Place AprilTag markers on the ground to define the monitored area
-3. Make sure tag **ID 2** and **ID 4** are on the top edge of the area, exactly **1.50 m apart**
-4. Run:
+1. Conecta tu computador a la red WiFi del Tello
+2. Coloca los marcadores AprilTag en el suelo para delimitar el área
+3. Asegúrate de que los tags **ID 2** e **ID 4** estén en el borde superior del área, separados exactamente **1.50 m**
+4. Ejecuta:
 
 ```bash
 python main.py
 ```
 
-5. Press `l` or `Escape` to land safely
+5. Presiona `l` o `Escape` para aterrizar de forma segura
 
-> To enable actual takeoff, uncomment the `tello.takeoff()` lines in `main.py`
+> Para activar el despegue real, descomenta las líneas `tello.takeoff()` en `main.py`
 
 ---
 
-## Configuration
+## Configuración
 
-| Parameter | Location | Default | Description |
+| Parámetro | Ubicación | Valor por defecto | Descripción |
 |---|---|---|---|
-| `DISTANCIA_REAL_METROS` | `construir_zona_y_calcular_area()` | `1.50` | Real distance between reference tags (meters) |
-| `fps` | `loop_principal()` | `5` | Frame save rate |
-| Reference tag IDs | `construir_zona_y_calcular_area()` | `2` and `4` | IDs of the top-edge reference tags |
+| `DISTANCIA_REAL_METROS` | `construir_zona_y_calcular_area()` | `1.50` | Distancia real entre los tags de referencia (metros) |
+| `fps` | `loop_principal()` | `5` | Tasa de guardado de frames |
+| IDs de tags de referencia | `construir_zona_y_calcular_area()` | `2` y `4` | IDs de los tags del borde superior |
 
 ---
 
-## Controls
+## Controles
 
-| Key | Action |
+| Tecla | Acción |
 |---|---|
-| `l` | Safe land |
-| `Escape` | Safe land |
-| `Ctrl+C` | Emergency safe land |
+| `l` | Aterrizaje seguro |
+| `Escape` | Aterrizaje seguro |
+| `Ctrl+C` | Aterrizaje de emergencia seguro |
 
 ---
 
-## License
+## Licencia
 
-MIT License — free to use and modify with attribution.
+MIT License — libre de usar y modificar con atribución.
 
 ---
 
-## Author
+## Autor
 
-Developed at Universidad de O'Higgins (UOH)  
-Computer Vision · Robotics · Python
+Desarrollado en la Universidad de O'Higgins (UOH)  
+Visión Computacional · Robótica · Python
