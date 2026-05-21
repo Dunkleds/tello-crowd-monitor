@@ -2,7 +2,6 @@
 
 Sistema de monitoreo de densidad de personas en tiempo real usando un **dron DJI Tello**, **YOLOv8** para detección de personas y marcadores **AprilTag** para calibración dinámica del área.
 
-Desarrollado como proyecto de visión computacional y robótica en la **Universidad de O'Higgins (UOH)**.
 
 ---
 
@@ -125,7 +124,4 @@ MIT License — libre de usar y modificar con atribución.
 
 ---
 
-## Autor
 
-Desarrollado en la Universidad de O'Higgins (UOH)  
-Visión Computacional · Robótica · Python
